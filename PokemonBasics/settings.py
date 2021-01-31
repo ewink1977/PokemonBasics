@@ -34,6 +34,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'PokemonApp',
+    'PokeUsersApp',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
