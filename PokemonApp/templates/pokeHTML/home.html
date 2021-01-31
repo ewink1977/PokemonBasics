@@ -3,15 +3,36 @@
 {% block pokeBlock %}
 <div class="row">
     <div class="col-8 p-3 pokeList"></div>
-    <div class="col p-3" id="pokeInfo"></div>
+    <div class="col p-3 border border-danger sticky-top pokeInfo"></div>
 </div>
 <script>
     function getPokemon(a) {
     for (var i = 1; i <= a; i++) {
-        console.log(i);
-        $(".pokeList").append(`<img id="` + i + `" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/` + i + `.png" alt="Pokemon #` + i + `">`);
+        $(".pokeList").append(`<img id="` + i + `" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/` + i + `.png" alt="Pokemon Number ` + i + `">`);
     }
 }
 getPokemon(150);
+</script>
+<script>
+    $( "img" ).click(function () {
+        var pokeID = $( this ).attr( "id" );
+        var pokeURL = "https://pokeapi.co/api/v2/pokemon/" + pokeID; 
+            $.get(pokeURL, function(pokeData) {
+            var pokeString = "";
+                pokeString += `<h2 class="pokemonName" style="text-transform: capitalize;">` + pokeData.species.name + `</h2>`
+                pokeString += `<img src="` + pokeData.sprites.front_default + `" alt="` + pokeData.species.name + `">`
+                pokeString += `<h3>Types</h3>`
+                pokeString += `<ul class="pokemonTypes">`
+                for( var i = 0; i < pokeData.types.length; i++) {
+                    pokeString += `<li>` + pokeData.types[i].type.name + `</li>`
+                }
+                pokeString += `</ul>`
+                pokeString += `<h3>Height</h3>`
+                pokeString += `<p>` + pokeData.height + `</p>`
+                pokeString += `<h3>Weight</h3>`
+                pokeString += `<p>` + pokeData.weight + `</p>`
+                $( ".pokeInfo" ).html(pokeString);
+            }, "json")
+        })
 </script>
 {% endblock pokeBlock %}
