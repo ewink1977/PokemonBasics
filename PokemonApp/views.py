@@ -1,4 +1,4 @@
 from django.shortcuts import render
 
 def HomePage(request):
-    pass
+    return render(request, 'pokeHTML/home.html')
