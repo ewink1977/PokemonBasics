@@ -1,6 +1,7 @@
+from typing import ItemsView
 from django.urls import path
 from . import views
 
 urlpatterns = [
-    # PATHS GO HERE!
+    path('', views.home, name = 'home'),
 ]
