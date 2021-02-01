@@ -18,6 +18,41 @@ def catchThePokemon(request):
     }
     return render(request, 'userHTML/catch.html', context)
 
+# THIS IS A GET REQUEST FOR THE SAKE OF SIMPLICITY.
+def addPokemon(request, pokeID):
+    user = User.objects.get(id = request.session['userid'])
+    if not Pokemon.objects.filter(poke_id = pokeID):
+        pokemon2add = Pokemon.objects.create(
+            poke_id = pokeID
+        )
+        user.pokemon_captured.add(pokemon2add)
+        context = {
+        'collector': user,
+        'pokemon': Pokemon.objects.all(),
+        'pagetitle': f"{user.username}'s Catch Page!"
+    }
+        messages.success(request, f"Nice work! You've added Pokemon number {pokeID} to your collection!")
+        return render(request, 'userHTML/partial.html', context)
+    else:
+        pokemon2add = Pokemon.objects.get(poke_id = pokeID)
+        user.pokemon_captured.add(pokemon2add)
+        context = {
+        'collector': user,
+        'pokemon': Pokemon.objects.all(),
+        'pagetitle': f"{user.username}'s Catch Page!"
+    }
+        messages.success(request, f"Nice work! You've added Pokemon number {pokeID} to your collection!")
+        return render(request, 'userHTML/partial.html', context)
+
+def displayPokemon(request):
+    user = User.objects.get(id = request.session['userid'])
+    context = {
+        'collector': user,
+        'pokemon': Pokemon.objects.all(),
+        'pagetitle': f"{user.username}'s Catch Page!"
+    }
+    return render(request, 'userHTML/partial.html', context)
+
 # USER REGISTRATION AND LOGIN
 def handle_registration(request):
     if request.method == 'POST':

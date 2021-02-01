@@ -17,6 +17,68 @@
         <small><a href="{% url 'logout' %}">LogOut</a></small>
     </div>
 </div>
+<div class="row">
+    <div class="col"></div>
+    <div class="col-5 border border-secondary rounded">
+        <h2>{{ collector.username }}'s Pokemon</h2>
+        <hr>
+        {% if collector.pokemon_captured.all %}
+        <div class="row pokemonCollection">
+            {% for pokemon in collector.pokemon_captured.all %}
+                <div class="col-4 pokeInfoBox{{ pokemon.poke_id }} text-center">
+                    <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/{{ pokemon.poke_id }}.png" alt="Pokemon Number {{ pokemon.poke_id }}">
+                </div>
+                <!-- <div class="col-3  align-middle"></div> -->
+                <script>
+                    $( document ).ready(function() {
+                    var pokeURL = "https://pokeapi.co/api/v2/pokemon/{{ pokemon.poke_id }}";
+                        $.get(pokeURL, function(pokeData) {
+                        var pokeString = "";
+                        pokeString += `<h4 class="pokemonName" style="text-transform: capitalize;">` + pokeData.species.name + `</h4>`
+                        $( ".pokeInfoBox{{ pokemon.poke_id }}" ).append(pokeString);
+                    }, "json")
+                });
+                </script>
+            {% endfor %}
+        </div>
+        {% else %}
+        <h5>LOL. You haven't caught any Pokemon yet.</h5>
+        {% endif %}
+    </div>
+</div>
+<script>
+    function randomPokemon(min, max) {
+        return Math.floor(Math.random() * (max - min + 1) + min);
+    }
+    var pokeID = randomPokemon(1, 200);
 
+    function pokeDiv() {
+        divsize = '96px';
+        $newdiv = $(`<div><img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/` + pokeID + `.png" pokeID="` + pokeID+ `">`).addClass('randoPokemon').css({
+            'width': divsize,
+            'height': divsize,
+        });
 
+        var posX = (Math.random() * ($(document).width() - 96)).toFixed();
+        var posY = (Math.random() * ($(document).height() - 96)).toFixed();
+        console.log(posX, posY);
+
+        $newdiv.css({
+            'position': 'absolute',
+            'left': posX+'px',
+            'top': posY+'px',
+            'display': 'none'
+        }).appendTo( 'body' ).fadeIn(100)
+    }
+    pokeDiv();
+
+    $( '.randoPokemon' ).click(function() {
+        console.log('You Have Clicked The Pokemon!');
+        $.get( `catch/`+ pokeID, function( data ) {
+            $( '.pokemonCollection' ).html( data );
+            console.log('POKEMON ADDED')
+        })
+        $(this).remove();
+    })
+</script>
 {% endblock pokeBlock %}

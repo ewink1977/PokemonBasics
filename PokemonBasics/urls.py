@@ -17,5 +17,5 @@ from django.urls import path, include
 
 urlpatterns = [
     path('', include('PokemonApp.urls')),
-    path('user', include('PokeUsersApp.urls')),
+    path('user/', include('PokeUsersApp.urls')),
 ]

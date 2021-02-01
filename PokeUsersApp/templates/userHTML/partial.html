@@ -1,0 +1,15 @@
+{% for pokemon in collector.pokemon_captured.all %}
+<div class="col-4 pokeInfoBox{{ pokemon.poke_id }} text-center">
+    <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/{{ pokemon.poke_id }}.png" alt="Pokemon Number {{ pokemon.poke_id }}">
+</div>
+<script>
+$( document ).ready(function() {
+    var pokeURL = "https://pokeapi.co/api/v2/pokemon/{{ pokemon.poke_id }}";
+    $.get(pokeURL, function(pokeData) {
+        var pokeString = "";
+        pokeString += `<h4 class="pokemonName" style="text-transform: capitalize;">` + pokeData.species.name + `</h4>`
+        $( ".pokeInfoBox{{ pokemon.poke_id }}" ).append(pokeString);
+				}, "json")
+});
+</script>
+{% endfor %}
