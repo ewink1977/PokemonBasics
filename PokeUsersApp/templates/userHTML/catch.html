@@ -1,34 +1,35 @@
 {% extends 'pokeHTML/base.html' %}
 {% load static %}
 {% block pokeBlock %}
-{% if messages %}
-<div class="row justify-content-center">
-    <div class="col-6 text-center">
-        {% for message in messages %}
-        <div class="alert alert-{{ message.tags }}" role="alert">
-        {{ message }}
-        </div>
-        {% endfor %}
-    </div>
-</div>
-{% endif %}
 <div class="row justify-content-end">
     <div class="col-1">
         <small><a href="{% url 'logout' %}">LogOut</a></small>
     </div>
 </div>
 <div class="row">
-    <div class="col"></div>
+    <div class="col">
+        <button type="button" class="btn btn-primary btn-lg btn-block newPokemon">Summon Another Pokemon!</button>
+    </div>
     <div class="col-5 border border-secondary rounded">
         <h2>{{ collector.username }}'s Pokemon</h2>
         <hr>
-        {% if collector.pokemon_captured.all %}
+        {% if messages %}
+        <div class="row justify-content-center">
+            <div class="col text-center">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}" role="alert">
+                {{ message }}
+                </div>
+            {% endfor %}
+            </div>
+        </div>
+        {% endif %}
         <div class="row pokemonCollection">
+        {% if collector.pokemon_captured.all|dictsort:"poke_id" %}
             {% for pokemon in collector.pokemon_captured.all %}
                 <div class="col-4 pokeInfoBox{{ pokemon.poke_id }} text-center">
                     <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/{{ pokemon.poke_id }}.png" alt="Pokemon Number {{ pokemon.poke_id }}">
                 </div>
-                <!-- <div class="col-3  align-middle"></div> -->
                 <script>
                     $( document ).ready(function() {
                     var pokeURL = "https://pokeapi.co/api/v2/pokemon/{{ pokemon.poke_id }}";
@@ -40,13 +41,17 @@
                 });
                 </script>
             {% endfor %}
-        </div>
-        {% else %}
-        <h5>LOL. You haven't caught any Pokemon yet.</h5>
+            {% else %}
+            <div class="col text-center">
+                <h5>LOL. You haven't caught any Pokemon yet.</h5>
+            </div>
         {% endif %}
+        </div>
     </div>
 </div>
 <script>
+    function generatePokemon() {
+
     function randomPokemon(min, max) {
         return Math.floor(Math.random() * (max - min + 1) + min);
     }
@@ -76,9 +81,18 @@
         console.log('You Have Clicked The Pokemon!');
         $.get( `catch/`+ pokeID, function( data ) {
             $( '.pokemonCollection' ).html( data );
-            console.log('POKEMON ADDED')
+            console.log('POKEMON NUMBER ' + pokeID + ' ADDED')
         })
         $(this).remove();
     })
+
+}
+generatePokemon();
+</script>
+<script>
+    $( '.newPokemon' ).click(function() {
+        generatePokemon();
+        console.log('Generating a new Pokemon!')
+    });
 </script>
 {% endblock pokeBlock %}

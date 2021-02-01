@@ -8,7 +8,7 @@ def home(request):
 
 def catchThePokemon(request):
     if not request.session['loggedin'] == True:
-        messages.error(request, f"D'oh!! You have to be logged in to access this page. How else can we keep track of your kick ass collection?", extra_tags = 'danger')
+        messages.error(request, "D'oh!! You have to be logged in to access this page. How else can we keep track of your kick ass collection?", extra_tags = 'danger')
         return redirect('home')
     user = User.objects.get(id = request.session['userid'])
     context = {
@@ -21,6 +21,14 @@ def catchThePokemon(request):
 # THIS IS A GET REQUEST FOR THE SAKE OF SIMPLICITY.
 def addPokemon(request, pokeID):
     user = User.objects.get(id = request.session['userid'])
+    if user.pokemon_captured.filter(poke_id = pokeID):
+        messages.error(request, "You already have captured that Pokemon, and international law states you may only have one of each kind.", extra_tags = 'danger')
+        context = {
+            'collector': user,
+            'pokemon': Pokemon.objects.all(),
+            'pagetitle': f"{user.username}'s Catch Page!"
+        }
+        return render(request, 'userHTML/partial.html', context)
     if not Pokemon.objects.filter(poke_id = pokeID):
         pokemon2add = Pokemon.objects.create(
             poke_id = pokeID
