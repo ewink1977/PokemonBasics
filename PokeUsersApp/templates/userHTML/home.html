@@ -2,16 +2,16 @@
 {% load static %}
 {% block pokeBlock %}
 <div class="row">
-    <div class="col-4">
+    <div class="col-4 mr-2 text-center">
         <h2>Register</h2>
     </div>
-    <div class="col-4">
+    <div class="col-4 ml-2 text-center">
         <h2>Log In</h2>
     </div>
 </div>
 <div class="row">
-    <div class="col-4 border border-dark rounded">
-        <form action="" method="POST">
+    <div class="col-4 mr-2 p-5 border border-dark rounded">
+        <form action="{% url 'register' %}" method="POST">
             {% csrf_token %}
             <div class="form-group">
                 <label for="username">User Name</label>
@@ -28,8 +28,8 @@
             <button type="submit" class="btn btn-primary">Sign Up!</button>
         </form>
     </div>
-    <div class="col-4 border border-dark rounded">
-        <form action="" method="POST">
+    <div class="col-4 ml-2 p-5 border border-dark rounded">
+        <form action="{% url 'login' %}" method="POST">
             {% csrf_token %}
             <div class="form-group">
                 <label for="username">User Name</label>

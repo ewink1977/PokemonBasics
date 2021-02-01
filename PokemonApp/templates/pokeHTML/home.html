@@ -1,6 +1,22 @@
 {% extends 'pokeHTML/base.html' %}
 {% load static %}
 {% block pokeBlock %}
+{% if messages %}
+<div class="row justify-content-center">
+    <div class="col-6 text-center">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}" role="alert">
+        {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+<div class="row justify-content-end">
+    <div class="col-5 text-right">
+        <h6><a href="{% url 'home' %}">Login or Register to catch your own Pokemon!</a></h6>
+    </div>
+</div>
 <div class="row">
     <div class="col text-center">
         <h1>ALL THE POKEMON!!!!</h1>
