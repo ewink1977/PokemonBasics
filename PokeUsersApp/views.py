@@ -7,7 +7,10 @@ def home(request):
     return render(request, 'userHTML/home.html')
 
 def catchThePokemon(request):
-    user = User.objects.get(id = request.session['id'])
+    if not request.session['loggedin'] == True:
+        messages.error(request, f"D'oh!! You have to be logged in to access this page. How else can we keep track of your kick ass collection?", extra_tags = 'danger')
+        return redirect('home')
+    user = User.objects.get(id = request.session['userid'])
     context = {
         'collector': user,
         'pokemon': Pokemon.objects.all(),
@@ -28,17 +31,38 @@ def handle_registration(request):
             request.session['userid'] = newUser.id
             request.session['username'] = newUser.username
             request.session['loggedin'] = True
-            messages.success(f'Whoop, whoop, {newUser.username}! You have successfully signed up to catch some Pokemon!')
+            messages.success(request, f'Whoop, whoop, {newUser.username}! You have successfully signed up to catch some Pokemon!')
             return redirect('catch')
-        pass
+        else:
+            dupUser = request.POST['username']
+            messages.error(request, f'OMG!!! {dupUser} is aready in use. Please choose a different user name!', extra_tags = 'danger')
+            return redirect('home')
     else:
         return redirect('home')
 
 def handle_login(request):
     if request.method == 'POST':
-        pass
+        userSearch = User.objects.filter(username = request.POST['username'])
+        if userSearch:
+            user = userSearch[0]
+            if bcrypt.checkpw(request.POST['password'].encode(), user.password.encode()):
+                request.session['userid'] = user.pk
+                request.session['username'] = user.username
+                request.session['loggedin'] = True
+                messages.success(request, f"ALRIGHT {user.username}!!! You have successfully logged in! Now, let's catch some Pokemon!")
+                return redirect('catch')
+            else:
+                messages.error(request, "Hrm... That password didn't work. If you're a hacker, please knock that off, otherwise try again or sign up for a new account!", extra_tags = 'danger')
+                return redirect('home')
+        else:
+            messages.error(request, "Weird. I didn't find that username in the database. Have you signed up? Did you typo? Please try again!", extra_tags = 'danger')
+            return redirect('home')
     else:
         return redirect('home')
 
 def handle_logout(request):
-    pass
+    del request.session['userid']
+    del request.session['username']
+    request.session['loggedin'] = False
+    messages.success(request, "Thanks for stopping by! You've been logged off, but I know you'll be back!")
+    return redirect('pokeall')
