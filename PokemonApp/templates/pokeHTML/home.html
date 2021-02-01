@@ -2,6 +2,11 @@
 {% load static %}
 {% block pokeBlock %}
 <div class="row">
+    <div class="col text-center">
+        <h1>ALL THE POKEMON!!!!</h1>
+    </div>
+</div>
+<div class="row">
     <div class="col-7 p-3 pokeList"></div>
     <div class="col-3 p-3">
         <div class="card border border-danger pokeInfo sticky-top">
@@ -26,7 +31,7 @@ getPokemon(200);
                 pokeString += `<div class="card-header text-center">`
                 pokeString += `<h2 style="text-transform: capitalize;">` + pokeData.species.name + `</h2>`
                 pokeString += `</div>`
-                pokeString += `<img src="` + pokeData.sprites.front_default + `" alt="` + pokeData.species.name + `">`
+                pokeString += `<img class="p-1 card-img-top" src="` + pokeData.sprites.other.dream_world.front_default + `" alt="` + pokeData.species.name + `">`
                 pokeString += `<div class="card-body">`
                 pokeString += `<h3>Types</h3>`
                 pokeString += `<ul class="pokemonTypes">`
